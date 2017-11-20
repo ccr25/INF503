@@ -114,13 +114,6 @@ int main() {
     int kmerSize = 30;
     int numberOfReadSeeds = (numberOfLines * kmerSize );
 
-
-    /*//create the 2D array to store my input reads
-    char ** readsFile = new char *[numberOfLines];
-    for (int i = 0; i <= numberOfLines; i++) {
-        readsFile[i] = new char[51];
-    }*/
-
     readNode ** slavasReadsNodeArray = new readNode * [numberOfReadSeeds];
     populateReadsFileArray(slavasReadsNodeArray, kmerSize, readLength);
 

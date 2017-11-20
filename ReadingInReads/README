@@ -1,0 +1,1 @@
+This code reads in a multifasta file containing reads from a metagenomic sample and stores them in an array. 

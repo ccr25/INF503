@@ -1,1 +1,3 @@
-This code reads in a multifasta file containing reads from a metagenomic sample and stores them in a 2D array. Using a sliding window of size 1, each read is fragmented into 30mers. The 30mer sequence, read number, and position in read is stored in a hash table. 
+This code reads in a multifasta file containing reads from a metagenomic sample and stores them in a 2D array. 
+Using a sliding window of size 1, each read is fragmented into 30mers. The 30mer sequence, read number, and position 
+in read is stored in a hash table. 

@@ -10,7 +10,7 @@ struct readNode {
     int readNumber;
     readNode * next;
     string readSeedSequence;
-    long double radix_value;
+    //long double radix_value;
 };
 
 readNode * CreateReadNode() {
@@ -38,7 +38,7 @@ int retrieveNumberOfLines () {
     return number_of_lines;
 }
 
-long double radix_converstion(string instring, int kmerSize) {
+/*long double radix_converstion(string instring, int kmerSize) {
     long double str_value, base_value;
     //cout<<"instring: "<<"\n";
     //cout <<"radix_conversion_string: "<< instring << "\n";
@@ -68,7 +68,7 @@ long double radix_converstion(string instring, int kmerSize) {
             cout << "test_poop\n";//' << '\n';
         }
     return str_value;
-}
+}*/
 
 readNode ** populateReadsFileArray( readNode ** readsFile, int kmerSize, int readLength) {
     string line;
@@ -86,10 +86,10 @@ readNode ** populateReadsFileArray( readNode ** readsFile, int kmerSize, int rea
                     int counter = 0;
                         while (counter < steppingSize) {
                             subLineToAddToNode = line.substr(counter, kmerSize);
-                            radix_value_to_add = radix_converstion(subLineToAddToNode, kmerSize);
+                            //radix_value_to_add = radix_converstion(subLineToAddToNode, kmerSize);
                             readNode * newReadNode = CreateReadNode();
-                            newReadNode->radix_value = radix_value_to_add;
-                            cout<<"radix value to add: "<<radix_value_to_add<<"\n";
+                            //newReadNode->radix_value = radix_value_to_add;
+                            //cout<<"radix value to add: "<<radix_value_to_add<<"\n";
                             newReadNode->readSeedSequence = subLineToAddToNode;
                             cout<<"read kmer sequence: "<<subLineToAddToNode<<"\n";
                             newReadNode->readNumber= readNumber;

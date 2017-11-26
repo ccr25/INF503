@@ -7,7 +7,7 @@ struct suffixNode{
 	suffixNode * G;
 	suffixNode * T;
 	suffixNode * N;
-	
+	int ID;
 	int start;
 	int end;
 
@@ -15,23 +15,23 @@ struct suffixNode{
 
 class Suffix Tree{
 	
-		private char * subject;
-			int G;
+	private char * subject;
+		int G;
 		
 	Node * root;
-	void set_subject_into_tree(char *, int size);
+	
 			
-		public:
-				
-			void suffix_tree();
-			void suffix_tree(char *, int size);
-			void ~suffix_tree();
+	public:
+		void set_subject_into_tree(char *, int size);	
+		void suffix_tree();
+		void suffix_tree(char *, int size);
+		void ~suffix_tree();
 
 
 
-			void insert();
-			void serarch();
-			struct *Node getNode();
+		void insert();
+		void serarch();
+		struct *Node getNode();
 
 	bool querry_trace(char *, int size);
 

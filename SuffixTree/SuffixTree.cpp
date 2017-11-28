@@ -18,7 +18,7 @@
 
 using namespace std;
 
-int * fasta_charcount(FILE * fin, int buffer, int grt_num){
+int * fasta_charcount(FILE * fin, int grt_num){
 
         int count,i, lin_count;
         char line[buffer];
@@ -28,12 +28,12 @@ int * fasta_charcount(FILE * fin, int buffer, int grt_num){
 
     int * count_array = (int *)calloc(grt_num,sizeof(int));
 
-    while(line != EOF){                   
+    while(!fin.eof()){                   
 
-    fgets(line,buffer,fin); 
+        while (getline(fin, line); 
     
     
-    printf("line = %s\n, length = %lu\n",line, strlen(line));
+    //printf("line = %s\n, length = %lu\n",line, strlen(line));
     
         if (line[0] == '>'){
             lin_count++;
@@ -41,7 +41,7 @@ int * fasta_charcount(FILE * fin, int buffer, int grt_num){
         else
         {   
             
-        printf("line_count = %d\n", lin_count);
+        //printf("line_count = %d\n", lin_count);
         count_array[lin_count-1] = count_array[lin_count-1] + strlen(line) - 1;       
         }
     

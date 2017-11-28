@@ -18,6 +18,42 @@
 
 using namespace std;
 
+int * fasta_charcount(FILE * fin, int buffer, int grt_num){
+
+        int count,i, lin_count;
+        char line[buffer];
+        i=0;
+        lin_count = 0;
+        count = 0;
+
+    int * count_array = (int *)calloc(grt_num,sizeof(int));
+
+    while(line != EOF){                   
+
+    fgets(line,buffer,fin); 
+    
+    
+    printf("line = %s\n, length = %lu\n",line, strlen(line));
+    
+        if (line[0] == '>'){
+            lin_count++;
+        }
+        else
+        {   
+            
+        printf("line_count = %d\n", lin_count);
+        count_array[lin_count-1] = count_array[lin_count-1] + strlen(line) - 1;       
+        }
+    
+    }
+     
+    fseek(fin,0,SEEK_SET);
+
+    return count_array;
+}
+
+
+
 //constructor
 void Suffix_Tree::suffix_tree(char * contig, int contigSize, suffixNode *root) {
     cout<<"contig = "<<contig<<"\n";

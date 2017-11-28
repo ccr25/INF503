@@ -20,6 +20,8 @@ struct suffixNode{
 
 };
 
+int * fasta_charcount(FILE * fin, int grt_num);
+
 class Suffix_Tree {
 
     suffixNode * root;

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void f(int grt_num, char ** header_array, char ** count_array){
+void concatGenomes(int grt_num, char ** header_array, char ** count_array){
 
     int count,i, lin_count;
     string line;
@@ -24,13 +24,20 @@ void f(int grt_num, char ** header_array, char ** count_array){
         while (std::getline(fin, line)) {
             //printf("line = %s\n, length = %lu\n",line, strlen(line));
             if (line[0] == '>') {
+                cout<<"line: "<<line<<"\n";
+                string line2 = line;
+                strcpy(header_array[lin_count], line2.c_str());
+                //cout<<"header array is: "<<header_array[lin_count]<<"\n";
                 lin_count++;
-                strcpy(header_array[lin_count -1], line.c_str());
+
+
 
             } else {
                 const char * tester = line.c_str();
                 //printf("line_count = %d\n", lin_count);
+                //cout<<"1header array is: "<<header_array[0]<<"\n";
                 strcat(count_array[lin_count -1], line.c_str());
+                //cout<<"2 header array is: "<<header_array[0]<<"\n";
             }
         }
     }
@@ -38,6 +45,36 @@ void f(int grt_num, char ** header_array, char ** count_array){
     //fseek(fin,0,SEEK_SET);
     fin.seekg(0, ios::beg);
 }
+
+int * fasta_charcount(int grt_num) {
+
+    string line;
+    int count, i, lin_count;
+    i = 0;
+    lin_count = 0;
+    count = 0;
+    ifstream inDatabase("/Users/croe/Desktop/viralDatabase.fasta");
+
+    int *count_array = (int *) calloc(grt_num, sizeof(int));
+
+    while (!inDatabase.eof()) {
+
+        while (getline(inDatabase, line)) {
+
+            printf("line = %s\n, length = %lu\n", line.c_str(), std::strlen(line.c_str()));
+
+            if (line[0] == '>') {
+                lin_count++;
+            } else {
+                printf("line_count = %d\n", lin_count);
+                count_array[lin_count - 1] = count_array[lin_count - 1] + std::strlen(line.c_str());
+            }
+        }
+    }
+        inDatabase.seekg(0, ios::beg);
+
+        return count_array;
+    }
 
 //constructor creates an array containing all possible kmers for the genome and populates the array.
 void Suffix_Tree::suffix_tree(char * contig, int contigSize, suffixNode *root) {

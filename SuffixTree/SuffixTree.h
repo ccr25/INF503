@@ -10,6 +10,14 @@
 
 #ifndef suffixTree.h
 #define suffixTree_h
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 struct suffixNode{
     suffixNode * children[alphabetSize];
@@ -19,8 +27,6 @@ struct suffixNode{
     int end;
 
 };
-
-int * fasta_charcount(FILE * fin, int grt_num);
 
 class Suffix_Tree {
 
@@ -40,8 +46,10 @@ public:
 
 };
 
-
-int chartoASCII(char c);
+int * fasta_charcount(int grt_num);
+void concatGenomes(int grt_num, char ** header_array, char ** count_array);
+int charToASCII(char c);
+int readNumberOfGenomesInDatabase();
 
 
 #endif

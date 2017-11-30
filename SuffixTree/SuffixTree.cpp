@@ -81,10 +81,10 @@ void Suffix_Tree::suffix_tree(char * contig, int contigSize, suffixNode *root) {
     //cout<<"contig = "<<contig<<"\n";
     //suffixNode *root = Suffix_Tree::createNode();
     // store them in a tree
-        for (int i = 0; i < contigSize; i++) {
+        for (int i = 29; i < contigSize; i++) {
             char * splitContig = new char [i+1];
             strncpy(splitContig, contig + contigSize -1 -i, i+1);
-            //printf("%s\n", splitContig);
+            printf("%s\n", splitContig);
             Suffix_Tree::insert(root, splitContig, i + 1);
         }
 }

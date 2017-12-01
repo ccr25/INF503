@@ -16,8 +16,9 @@
 #include <stdbool.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
-using namespace std;
+//using namespace std;
 
 struct suffixNode{
     suffixNode * children[alphabetSize];
@@ -47,7 +48,7 @@ public:
 };
 
 int * fasta_charcount(int grt_num);
-void concatGenomes(int grt_num, char ** header_array, char ** count_array);
+void concatGenomes(int grt_num, char ** header_array, char ** count_array, int * ID_array);
 int charToASCII(char c);
 int readNumberOfGenomesInDatabase();
 

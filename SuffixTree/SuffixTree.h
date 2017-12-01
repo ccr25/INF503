@@ -23,9 +23,9 @@
 struct suffixNode{
     suffixNode * children[alphabetSize];
     bool isend;
-    int ID;
     int start;
     int end;
+    std::vector<int> *ID;
 
 };
 
@@ -43,7 +43,7 @@ public:
     static bool search(struct suffixNode *root, const char *contig, int mismatchValue, int length);
     static suffixNode * createNode();
     static char * readFileFunction();
-    //bool querry_trace(char *, int size);
+
 
 };
 

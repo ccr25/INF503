@@ -8,10 +8,11 @@
 #include <fstream>
 #include "suffixTree.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-void concatGenomes(int grt_num, char ** header_array, char ** count_array){
+void concatGenomes(int grt_num, char ** header_array, char ** count_array, int * ID_array){
 
     int count,i, lin_count;
     string line;
@@ -19,7 +20,10 @@ void concatGenomes(int grt_num, char ** header_array, char ** count_array){
     lin_count = 0;
     count = 0;
     ifstream fin("/Users/croe/Desktop/viralDatabase.fasta");
-
+    char * found;
+    int iD;
+    int size;
+    char IDBuffer[20];
     while(!fin.eof()){
         while (std::getline(fin, line)) {
             //printf("line = %s\n, length = %lu\n",line, strlen(line));
@@ -27,6 +31,13 @@ void concatGenomes(int grt_num, char ** header_array, char ** count_array){
                 cout<<"line: "<<line<<"\n";
                 string line2 = line;
                 strcpy(header_array[lin_count], line2.c_str());
+                found = strchr(header_array[lin_count], '_');
+                iD = found - header_array[lin_count] + 1;
+                size = std::strlen(found);
+                strncpy(IDBuffer, header_array[lin_count] + iD, size);
+                ID_array[lin_count] = atoi(IDBuffer);
+                cout<<"ID is "<<ID_array[lin_count]<<"\n";
+
                 //cout<<"header array is: "<<header_array[lin_count]<<"\n";
                 lin_count++;
 
@@ -177,6 +188,16 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length
     }
     p->isend = true;
 }
+
+/*void storeTaxaIDonTerminalNode(struct suffixNode *p) {
+
+    if (p->isend == true) {
+        vector<char*> vctpnt;
+
+
+
+    }
+}*/
 
 // search a sequence if it is presneted in the tree or not. return 0 for not presented, 1 for presented;
 bool Suffix_Tree::search(struct suffixNode *root, const char *contig, int mismatchValue, int length)

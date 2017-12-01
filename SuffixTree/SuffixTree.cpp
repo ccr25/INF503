@@ -189,13 +189,9 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length
     p->isend = true;
 }
 
-/*void storeTaxaIDonTerminalNode(struct suffixNode *p) {
+/*void storeTaxaIDonTerminalNode(struct suffixNode *p, ) {
 
     if (p->isend == true) {
-        vector<char*> vctpnt;
-
-
-
     }
 }*/
 

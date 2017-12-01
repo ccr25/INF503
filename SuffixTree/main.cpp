@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 #include <string.h>
+#include <vector>
 
 using namespace std;
 
@@ -29,13 +30,14 @@ int main() {
 
     int numbRGenomes;
     int * intArray;
-    //std::ifstream inReadFile("/Users/croe/Desktop/viralDatabase.fasta");
+    std::ifstream inReadFile("/Users/croe/Desktop/viralDatabase.fasta");
     //open the multifasta database and count how many genomes are going to be loaded into the tree, return that number
     numbRGenomes = readNumberOfGenomesInDatabase();
-    //cout<<"Number of Genomes in Database: "<<numbRGenomes<<"\n";
+    cout<<"Number of Genomes in Database: "<<numbRGenomes<<"\n";
 
-   /* intArray = fasta_charcount(numbRGenomes);
+    intArray = fasta_charcount(numbRGenomes);
     char ** header_array = new char *[numbRGenomes];
+    int * ID_array = new int [numbRGenomes];
     char ** count_array = new char * [numbRGenomes];
     for (int i= 0; i < numbRGenomes; i++) {
         count_array[i] = new char [intArray[i]];
@@ -43,19 +45,21 @@ int main() {
         cout<<"int array is: "<<intArray[i]<<"\n";
     }
 
-    concatGenomes(numbRGenomes, header_array, count_array);
+    concatGenomes(numbRGenomes, header_array, count_array, ID_array);
+    std::sort(ID_array, ID_array + numbRGenomes);
     for (int i = 0; i < numbRGenomes; i++) {
-        cout<<"header array: "<<header_array[1]<<"\n";
-        cout<<"count array: "<<count_array[i]<<"\n";
+        cout<<"ID array sorted: "<<ID_array[i]<<"\n";
+        //cout<<"header array: "<<header_array[i]<<"\n";
+        //cout<<"count array: "<<count_array[i]<<"\n";
 
     }
 
 
     //Read the database file in, populating a 2D array with all of the genomes, return this array
     tester = Suffix_Tree::readFileFunction();
-    Suffix_Tree::suffix_tree(tester, 13, root);
-    cool = Suffix_Tree::search(root, subStr, 1, 3);
-    //cout<<"search = "<<cool<<"\n";*/
+    Suffix_Tree::suffix_tree(tester, 36, root);
+    cool = Suffix_Tree::search(root, subStr, 0, 30);
+    cout<<"search = "<<cool<<"\n";
 
 
 }

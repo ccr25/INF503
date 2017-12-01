@@ -38,22 +38,43 @@ int main() {
     intArray = fasta_charcount(numbRGenomes);
     char ** header_array = new char *[numbRGenomes];
     int * ID_array = new int [numbRGenomes];
-    char ** count_array = new char * [numbRGenomes];
+    char ** genome_array = new char * [numbRGenomes];
     for (int i= 0; i < numbRGenomes; i++) {
-        count_array[i] = new char [intArray[i]];
+        genome_array[i] = new char [intArray[i]];
         header_array[i] = new char[200];
         cout<<"int array is: "<<intArray[i]<<"\n";
     }
 
-    concatGenomes(numbRGenomes, header_array, count_array, ID_array);
-    std::sort(ID_array, ID_array + numbRGenomes);
+    concatGenomes(numbRGenomes, header_array, genome_array, ID_array);
+//This converts
+
+    vector<pair<int,char*>> vect;
+    vector<pair<int,int>> vect1;
+
+
+    for (int i = 0; i < numbRGenomes;i++) {
+        vect.push_back(make_pair(ID_array[i], genome_array[i]));
+        vect1.push_back(make_pair(ID_array[i], intArray[i]));
+    }
+
+    std::sort(vect.begin(), vect.end());
+    std::sort(vect1.begin(), vect1.end());
+
     for (int i = 0; i < numbRGenomes; i++) {
+
+        ID_array[i] = vect[i].first;
+        genome_array[i] = vect[i].second;
+        intArray[i] = vect1[i].second;
+
         cout<<"ID array sorted: "<<ID_array[i]<<"\n";
+        cout<<"INt array sorted: "<<intArray[i]<<"\n";
+
         //cout<<"header array: "<<header_array[i]<<"\n";
-        //cout<<"count array: "<<count_array[i]<<"\n";
+        cout<<"count array: "<<genome_array[i]<<"\n";
 
     }
 
+    //gets size of genomes to make the count_array
 
     //Read the database file in, populating a 2D array with all of the genomes, return this array
     tester = Suffix_Tree::readFileFunction();
@@ -62,4 +83,26 @@ int main() {
     cout<<"search = "<<cool<<"\n";
 
 
+
+
+
+   /* vector<pair<int,char*> > vect;
+
+    for (int i = 0; i < numbRGenomes;i++){
+        vect.push_back(make_pair(ID_array[i], count_array[i]));
+
+    }
+    for (int i = 0; i < numbRGenomes; i++) {
+        cout << "vect1: " << vect[i].first << "\n";
+        //cout<<"header ar ray: "<<header_array[i]<<"\n";
+        cout << "vect2: " << vect[i].second << "\n";
+
+    }
+    std::sort(vect.begin(), vect.end());
+    for (int i = 0; i < numbRGenomes; i++) {
+        cout<<"vect1 sorted: "<<vect[i].first<<"\n";
+        //cout<<"header ar ray: "<<header_array[i]<<"\n";
+        cout<<"vect2 sorted: "<<vect[i].second<<"\n";
+
+    }*/
 }

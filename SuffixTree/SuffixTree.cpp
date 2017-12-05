@@ -176,19 +176,27 @@ suffixNode * Suffix_Tree::createNode()
 // We don't need int count in our project, it counts number of nodes in the tree.
 void Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length, int ID, int startValue, char ** genome_array) {
 
-    int i;
+
     int index;
+    int count =0;
     struct suffixNode *p = root;
-    for (i = 0; i < length; i++) {
+    int i = 0;
+    while (i < length) {
+       cout<<"start\n";
+        i++;
+        cout<<"i equals at start "<<i<<"\n";
         index = charToASCII(contig[i]);
         int keepTrackOfNode = charToASCII(genome_array[ID][startValue + 1]);
         if (p->children[index] == nullptr) {
+
+            cout<<"whole contig: "<<contig<<"\n";
+            cout<<"whole length: "<<length<<"\n";
             p->children[index] = createNode();
             p->children[index]->ID = ID;
             p->children[index]->start = startValue + i;
             p->children[index]->end = length;
             p->children[index]->isend = true;
-            p->end = i;
+            p->children[index]->end = i;
             break;
         }
 
@@ -196,9 +204,12 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length
 
             if (p->children[index]->isend == false) {
                 cout<<"we suck, cool\n";
+                cout<<"the end value: "<<p->children[index]->end<<"\n";
+                //cout<<"i in first: "<<i<<"\n";
                 //checks length of node sequence against remaining contig length
                     if(p->children[index]->children[keepTrackOfNode]->end - p->children[index]->children[keepTrackOfNode]->start >= length - i){
                         for (int j = p->children[index]->start; j < p->children[index]->end; j++) {
+                            cout<<"what is j: "<<j<<"\n";
                             cout<<"we suck\n";
                             if (genome_array[p->children[index]->ID][j] == contig[i]) {
                                 i++;
@@ -218,14 +229,25 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length
 
                             }
 
-                        }else{
+                    }else{
+
                             int j = p->children[index]->start;
+                        //cout<<"i in first: "<<i<<"\n";
                             while(i < length){
+                                /*cout<<"i in first: "<<i<<"\n";
+                                cout<<"genome_array: "<<genome_array[p->children[index]->ID][j]<<"\n";
+                                cout<<"contig: "<<contig[i]<<"\n";
+                                cout<<"j is: "<<j<<"\n";
+                                cout<<"i is: "<<i<<"\n";
+                                cout<<"whole contig: "<<contig<<"\n";
+                                 */
                                 if (genome_array[p->children[index]->ID][j] == contig[i]) {
+
                                     i++;
                                     j++;
                                 }
                                 else {
+                                    cout<<"howdy "<<"\n";
                                     p->children[index]->children[keepTrackOfNode] = createNode();
                                     p->children[index]->children[keepTrackOfNode]->ID = ID;
                                     p->children[index]->children[keepTrackOfNode]->start = startValue + j;
@@ -245,17 +267,24 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length
                     }
         }
 
-            if (p->isend == true) {
+            if (p->children[index]->isend == true) {
 
-                int keepTrackOfNode = charToASCII(genome_array[p->ID][p->start + i]);
+                int keepTrackOfNode = charToASCII(genome_array[p->children[index]->ID][p->children[index]->start + i]);
                 for (int k = p->children[index]->start; k < length; k++) {
-                   cout<<"reall, we do"<<"\n";
-                    if (genome_array[p->ID][k] == contig[i]) {
+                   cout<<"really, we do"<<"\n";
+                    cout<<"genome_array: "<<genome_array[p->children[index]->ID][k]<<"\n";
+                    cout<<"contig: "<<contig[i]<<"\n";
+                    cout<<"k is: "<<k<<"\n";
+                    cout<<"i is: "<<i<<"\n";
+                    cout<<"whole contig: "<<contig<<"\n";
+                    if (genome_array[p->children[index]->ID][k] == contig[i]) {
                         i++;
                     } else {
+                        cout<<"this should kill it\n";
                         p->children[index]->children[keepTrackOfNode] = createNode();
-                        p->children[index]->children[keepTrackOfNode]->ID = p->ID;
-                        p->children[index]->children[keepTrackOfNode]->start = p->start + k;
+                        p->children[index]->children[keepTrackOfNode]->ID = ID;
+                        p->children[index]->children[keepTrackOfNode]->start = startValue + k;
+                        p->children[index]->children[keepTrackOfNode]->end = length;
                         p->children[index]->children[keepTrackOfNode]->isend = true;
                         p->children[index]->isend = false;
                         p->children[index]->end = k;
@@ -362,17 +391,18 @@ void printTree(suffixNode * root, char ** genome_array) {
     for (int i = 0; i < 5; i++) {
         cout<<"node zero is : "<<p->children[3]->start<<"\n";
         for(int j = 0; j < 5; j++) {
-            if (p->children[j] == nullptr) {
-                cout << "the child is:" << j << " " << "Yes" << "\n";
+
+            if (p->children[0]->children[j] == nullptr) {
+                cout << "the child is: " << j << " " << "Yes" << "\n";
             }else{
-                cout<<"why would you do this "<<j<<" "<<p->children[3]->children[j]->start<<"\n";
+                cout<<"why would you do this "<<j<<" "<<p->children[0]->children[j]->start<<"\n";
             }
         }
         cout<<"end is : "<<p->children[3]->end<<"\n";
         cout<<"the letter is : "<<genome_array[p->children[3]->ID][p->children[3]->start]<<"\n";
 
 
-        p = p->children[3];
+       // p = p->children[3];
     }
 }
 

@@ -88,19 +88,19 @@ int * fasta_charcount(int grt_num) {
 }
 //TODO::make sure to change the value back to 29!!
 //constructor creates an array containing all possible kmers for the genome and populates the array.
-void Suffix_Tree::suffix_tree(char * contig, int contigSize, suffixNode *root, int ID, char ** genome_array ) {
-    //cout<<"contig = "<<contig<<"\n";
+void Suffix_Tree::build_tree(suffixNode *root,char ** genome_array, int ID) {
     //suffixNode *root = Suffix_Tree::createNode();
     // store them in a tree
-    cout<<"contig size outside of loop: "<<contigSize<<"\n";
-    for (int i = 0; i < contigSize; i++) {
-        cout<<"i is what: "<<i<<"\n";
-        char * splitContig = new char [i+1];
-        strncpy(splitContig, contig + contigSize -1 -i, i+1);
-        printf("contig going in %s\n", splitContig);
-        Suffix_Tree::insert(root, splitContig, i + 1, ID, contigSize -i -1, genome_array, contigSize);
+    int size;
+    size= strlen(genome_array[ID]);
+    for (int i = 29; i < size; i++) {
+        char split [i+1];
+        strncpy(split, genome_array[ID] +size-i-1, 30);
+        cout<<split<<"\n";
+        Suffix_Tree::insert(root, split,genome_array,size-i, ID);
     }
 }
+
 
 //function to read in the database multifasta file and return the number of genomes in the database based on '>'.
 int readNumberOfGenomesInDatabase() {
@@ -174,214 +174,185 @@ suffixNode * Suffix_Tree::createNode()
     return pN;
 }
 
-void Suffix_Tree::branchTree(suffixNode * parentNode, int j, int i, int currentChild, char ** genome_array, const char * contig, int ID, int startValue, int length, int totalLength) {
-
-    cout<<"are we in branch tree?"<<"\n";
-    suffixNode * temp1 = createNode();
-    cout<<"temp1 start is: "<<parentNode->children[currentChild]->start<<"\n";
-    temp1->start = parentNode->children[currentChild]->start;
-    temp1->end = parentNode->children[currentChild]->start + (j - parentNode->children[currentChild]->start);
-    cout<<"temp1 end value is: "<<parentNode->children[currentChild]->start + (j - parentNode->children[currentChild]->start)<<"\n";
-    temp1->ID = parentNode->children[currentChild]->ID;
-    cout<<"are we past first chunk?"<<"\n";
-
-   //Gets character for start value of old node
-    //TODO::NEEDS WORK
-    int newStart = charToASCII(genome_array[parentNode->children[currentChild]->ID][parentNode->children[currentChild]->start + (j - 2)]);
-    cout<<"what is j: "<<j<<"\n";
-    cout<<"parent node child start: "<<parentNode->children[currentChild]->start<<"\n";
-    cout<<"parent node ID: "<<parentNode->children[currentChild]->ID<<"\n";
-    cout<<"genome array: "<<genome_array[0][2]<<"\n";
-    //cout<<"char to ascii is:"<<charToASCII()
-    cout<<"new start: "<<newStart<<"\n";
-
-    temp1->children[newStart] = parentNode->children[currentChild];
-    temp1->children[newStart]->start = temp1->children[newStart]->start + j - 1;
-    parentNode->children[currentChild] = temp1;
-    cout<<"are we past second chunk?"<<"\n";
-
-    suffixNode * temp2 = createNode();
-    cout<<"contig j:"<<contig[i]<<"\n";
-    int checkValues = charToASCII(contig[i]);
-    temp1->children[checkValues] = temp2;
-    cout<<"what is our ascii value: "<<checkValues<<"\n";
-    temp2->start = startValue + j - 1;
-    temp2->end = totalLength;
-    temp2->ID = ID;
-    temp2->isend = true;
-    cout<<"are we past third chunk?"<<"\n";
-
-}
-
 // insert a new sequence to the tree
 // We don't need int count in our project, it counts number of nodes in the tree.
-int Suffix_Tree::insert(struct suffixNode *root, const char *contig, int length, int ID, int startValue, char ** genome_array, int totalLength) {
+// insert a new sequence to the tree
+void Suffix_Tree::insert(struct suffixNode *root, const char *sequence,char **genome_array, int position, int ID) {
 
-    cout << "initial length: " << length << "\n";
-    cout<<"initial start value: "<<startValue<<"\n";
-
-    int index;
-    int count = 0;
+    int i,j;
+    int substr_len;
+    int length = strlen(sequence);
+    int gothrough = 0;
+    int index,index1,index2;
     struct suffixNode *p = root;
-    int i = 0;
-    while (i < length) {
-        //cout<<"start\n";
-        //cout<<"i equals at start "<<i<<"\n";
-        index = charToASCII(contig[i]);
-        int keepTrackOfNode = charToASCII(genome_array[ID][startValue + 1]);
-        if (p->children[index] == nullptr) {
+    cout<<" position is "<< position -1  <<"\n";
+    while (gothrough<length)
+    {
 
-            cout << "whole contig: " << contig << "\n";
-            cout << "whole length: " << length << "\n";
+        //if we don't have the node, we create a new one and store start, end in this node
+        index = charToASCII(sequence[gothrough]);
+        if (!p->children[index]){
             p->children[index] = createNode();
-            p->children[index]->ID = ID;
-            p->children[index]->start = startValue + i;
-            p->children[index]->end = totalLength;
-            p->children[index]->isend = true;
-           return 0;
-        } else {
-            suffixNode *currentNode = p->children[index];
-            // if (currentNode->isend == false) {
-            cout << "we suck, cool\n";
-            cout << "the end value: " << p->children[index]->end << "\n";
-            cout << "i in first: " << i << "\n";
-            //checks length of node sequence against remaining contig length
-            cout << "current end minus current start: " << currentNode->end - currentNode->start << "\n";
-            cout << "length: " << length << "\n";
-            cout << "start value: " << currentNode->start << "\n";
-            cout << "end value: " << currentNode->end << "\n";
-            if (currentNode->end - currentNode->start < length - i) {
-                cout << "if start value: " << currentNode->start << "\n";
-                cout << "if end value: " << currentNode->end << "\n";
-                for (int j = currentNode->start; j < currentNode->end; j++) {
-                    cout << "what is j: " << j << "\n";
-                    cout << "we suck\n";
-                    if (genome_array[currentNode->ID][j] == contig[i]) { //if the bases match, continue
-                        i++;
+            p=p->children[index];
+            p->ID = ID;
+            p->	start = position+gothrough-1;
+            p-> end = position +length-2;
+            //cout<<"I got a new node lol"<<"\n";
+            cout<<"number 1 to see pushback"<<"\n";
+            cout<<"ID is: "<<ID<<"\n";
+            p->IDlist.insert(p->IDlist.end(), ID);
+            cout<<"node ID is: "<<p->ID<<"\n";
 
+            return;
+        }else{
+            // if we do have the node, we compare them
+            int *temp;
+            p=p->children[index];
+            int size_of_nodestr=p->end-p->start+1;
+            char node_str[size_of_nodestr];
+            int ID_value = p->ID;
+            strncpy(node_str, (genome_array[ID_value] + p->start), size_of_nodestr);
+            //cout<<"node str is "<<node_str<<"\n";
+            substr_len=length-gothrough;
+            //cout<<"we there #1"<<"\n";
+            if (size_of_nodestr<substr_len){
+                for (j=0;j<size_of_nodestr;j++){
+                    if (node_str[j]!=sequence[gothrough+j]){
+                        //char temp_substr1[length-j];
+                        //char temp_substr2[size_of_nodestr-j];
+                        //cout<<"we there #2"<<"\n";
+                        int previous_end;
+
+                        p->end=p->start+gothrough+j-1;
+                        previous_end = p->end+1;
+                        //cout<<"previous_end "<<previous_end<<"\n";
+                        index1=charToASCII(node_str[gothrough+j]);
+                        index2=charToASCII(sequence[gothrough+j]);
+                        p->children[index1] = createNode();
+                        struct suffixNode *temp1 = p->children[index1];
+                        temp1->start=previous_end;
+                        temp1->end =previous_end+size_of_nodestr-j-1;
+                        //temp1->ID = ID;
+                        p->children[index2] = createNode();
+                        struct suffixNode *temp2 = p->children[index2];
+                        //cout<<"j is "<<j<<"\n";
+                        //cout<<"length is "<<length<<"\n";
+                        temp2->start=position-1+gothrough+j ;
+                        temp2->end =position+length-2;
+                        temp2->ID = ID;
+                        cout<<"number 2 to see pushback"<<"\n";
+                        temp2->IDlist.insert(temp2->IDlist.end(), ID);
+                        cout<<"node ID is: "<<temp2->ID<<"\n";
+                        return;
                     }
-                    else { //if the bases don't match, split the node up and create a new node.
-                        //TODO::make this a separate function on its own that we call here.
-                        cout << "where are we" << "\n";
-                        Suffix_Tree::branchTree(p, j, i, keepTrackOfNode, genome_array, contig, ID, startValue,
-                                                length, totalLength);
+                }
 
+                gothrough=gothrough+size_of_nodestr;
 
-
-                        return 0;
-
+            } else{
+                //cout<<"we there #3"<<"\n";
+                for (j=0;j<substr_len;j++){
+                    if (node_str[j]!=sequence[gothrough+j]){
+                        //char temp_substr1[length-j];
+                        //char temp_substr2[size_of_nodestr-j];
+                        int previous_end;
+                        p->end=p->start+gothrough+j-1;
+                        previous_end = p->end+1;
+                        index1=charToASCII(node_str[gothrough+j]);
+                        index2=charToASCII(sequence[gothrough+j]);
+                        p->children[index1] = createNode();
+                        struct suffixNode *temp1 = p->children[index1];
+                        temp1->start=previous_end;
+                        temp1->end =previous_end+size_of_nodestr-j-1;
+                        //temp1->ID = ID;
+                        //temp1->IDlist->push_back(ID);
+                        p->children[index2] = createNode();
+                        struct suffixNode *temp2 = p->children[index2];
+                        //cout<<"j is "<<j<<"\n";
+                        //cout<<"length is "<<length<<"\n";
+                        temp2->start=position-1+gothrough+j ;
+                        temp2->end =position+length-2;
+                        temp2->ID = ID;
+                        temp2->IDlist.insert(temp2->IDlist.end(), ID);
+                        cout<<"node ID is: "<<temp2->ID<<"\n";
+                        return;
                     }
 
                 }
-
-                    char *subContig = new char[length-i];
-
-                    strncpy(subContig, contig + i, length - i);
-                    cout<<"running insert 2nd time\n";
-                    cout<<"substring here "<<subContig<<"\n";
-                    cout<<"start value before recursion is: "<<startValue<<"\n";
-                    insert(currentNode, subContig, length - i, ID, startValue , genome_array,totalLength);
-                    cout<<"the length minus i is: "<<length - i<<"\n";
-                    return 0;
+                p->IDlist.insert(p->IDlist.end(), ID);
+                cout<<"node ID is: "<<p->ID<<"\n";
+                return;
             }
-            else{
-                cout<<"is this our problem???"<<"\n";
-            }
-        /*}
 
-                else{
-
-                int j = p->children[index]->start;
-            //cout<<"i in first: "<<i<<"\n";
-                while(i < length){
-                    /*cout<<"i in first: "<<i<<"\n";
-                    cout<<"genome_array: "<<genome_array[p->children[index]->ID][j]<<"\n";
-                    cout<<"contig: "<<contig[i]<<"\n";
-                    cout<<"j is: "<<j<<"\n";
-                    cout<<"i is: "<<i<<"\n";
-                    cout<<"whole contig: "<<contig<<"\n";
-
-                    if (genome_array[p->children[index]->ID][j] == contig[i]) {
-
-                        i++;
-                        j++;
-                    }
-                    else {
-                        cout<<"howdy "<<"\n";
-                        p->children[index]->children[keepTrackOfNode] = createNode();
-                        p->children[index]->children[keepTrackOfNode]->ID = ID;
-                        p->children[index]->children[keepTrackOfNode]->start = startValue + j;
-                        p->children[index]->children[keepTrackOfNode]->end = length;
-                        p->children[index]->children[keepTrackOfNode]->isend = true;
-                        p->children[index]->isend = false;
-                        p->children[index]->end = j;
-                        break;
-                    }
-
-
-
-                }
-
-            int keepTrackOfNode = charToASCII(genome_array[p->children[index]->ID][p->children[index]->start + i]);
-            p->children[index] = p->children[index]->children[keepTrackOfNode];
-        }
-}
-
-if (p->children[index]->isend == true) {
-
-    int keepTrackOfNode = charToASCII(genome_array[p->children[index]->ID][p->children[index]->start + i]);
-    for (int k = p->children[index]->start; k < length; k++) {
-       cout<<"really, we do"<<"\n";
-        cout<<"genome_array: "<<genome_array[p->children[index]->ID][k]<<"\n";
-        cout<<"contig: "<<contig[i]<<"\n";
-        cout<<"k is: "<<k<<"\n";
-        cout<<"i is: "<<i<<"\n";
-        cout<<"whole contig: "<<contig<<"\n";
-        if (genome_array[p->children[index]->ID][k] == contig[i]) {
-            i++;
-        } else {
-            cout<<"this should kill it\n";
-            p->children[index]->children[keepTrackOfNode] = createNode();
-            p->children[index]->children[keepTrackOfNode]->ID = ID;
-            p->children[index]->children[keepTrackOfNode]->start = startValue + k;
-            p->children[index]->children[keepTrackOfNode]->end = length;
-            p->children[index]->children[keepTrackOfNode]->isend = true;
-            p->children[index]->isend = false;
-            p->children[index]->end = k;
-            break;
         }
     }
-}
-}*/
-                }
-            }
-        }
 
+    p->IDlist.insert(p->IDlist.end(), ID);
+    cout<<"node ID is: "<<p->ID<<"\n";
+    return;
+    //cout<<"childd start "<<p->	start<<"\n";
+    //cout<<"childd end "<<p->	end<<"\n";
+    /*p-> end = position +i+length-2;
+    cout<<" start is "<< p->start <<"\n";
+    cout<<" end is "<< p->end <<"\n";
+    cout<<"we didn't have a new node'"<<"\n";
+
+    cout<<"next node start"<<p->start <<"\n";*/
+}
 
 // search a sequence if it is presneted in the tree or not. return 0 for not presented, 1 for presented;
-bool Suffix_Tree::search(struct suffixNode *root, const char *contig, int mismatchValue, int length)
+vector<int> Suffix_Tree::search(struct suffixNode *root, const char *sequence,char ** genome_array)
 {
     int i;
-    int count = 0;
+    int length = strlen(sequence);
     int index;
+    int gothrough=0;
     struct suffixNode *p = root;
-    for (i = 0; i < length; i++)
+    while (gothrough<length)
     {
-        index = charToASCII(contig[i]);
-
+        cout<<"go through is "<<gothrough<<"\n";
+        index = charToASCII(sequence[gothrough]);
+        cout<<"we there #3  "<<"\n";
         if (!p->children[index]) {
-            count++;
-            //cout<<"count equals: "<<count<<"\n";
-            if (count > mismatchValue) {
-                return false;
-            }
-        }
-        p = p->children[index];
-    }
-    //return (p!= NULL && p->isend);
-    return true;
-}
+            cout<<"we there #2  "<<"\n";
+            return {};
+        }else {
+            cout<<"we there #1 "<<"\n";
+            p=p->children[index];
+            cout<<"this is hi:"<<"\n";
 
+            int size_of_nodestr=p->end - p->start +1;
+            int size_of_substr=length-gothrough;
+            int IDValue = p->ID;
+
+            char node_str[size_of_nodestr];
+            snprintf(node_str,size_of_nodestr+1,genome_array[IDValue]+p->start);
+            //cout<<"node string is "<<node_str<<"\n";
+            if (size_of_nodestr<size_of_substr){
+                for (i=0;i<size_of_nodestr;i++){
+                    if (node_str[i]!=sequence[gothrough+i]){
+                        return {};
+                    }
+                }
+                gothrough=gothrough+size_of_nodestr;
+
+            } else{
+                for (i=0;i<size_of_substr;i++){
+                    if (node_str[i]!=sequence[gothrough+i]){
+                        return {};
+                    }
+                }
+                cout<<"Found::"<<"\n";
+                return p->IDlist;
+            }
+
+        }
+        cout<<"we there #4 "<<"\n";
+
+    }
+    cout<<"Found1::"<<"\n";
+    return p->IDlist;         //(p!= NULL && p->isend);
+}
 struct readNode {
     int locationInRead;
     int readNumber;

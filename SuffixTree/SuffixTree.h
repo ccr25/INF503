@@ -31,8 +31,8 @@ struct suffixNode{
     int start;
     int end;
     int ID;
-    std::vector<int> *IDList;
-    std::vector<int> *startingValue;
+    std::vector<int> IDlist;
+    //std::vector<int> *startingValue;
 
 
 };
@@ -44,15 +44,13 @@ class Suffix_Tree {
 public:
     //void set_subject_into_tree(char *, int size);
     //void suffix_tree();
-    static void suffix_tree(char * contig, int contigSize,suffixNode *root, int ID, char ** genome_array );
+    //static void suffix_tree(char * contig, int contigSize,suffixNode *root, int ID, char ** genome_array );
     //void ~suffix_tree();
-
-    static int insert(struct suffixNode *root, const char *contig, int length, int ID, int startValue, char ** genome_array , int totalLength);
-    static bool search(struct suffixNode *root, const char *contig, int mismatchValue, int length);
+    static std::vector<int> search(struct suffixNode *root, const char *sequence, char **genome_array);
+    static void build_tree(suffixNode *root,char ** genome_array, int ID);
+    static void insert(struct suffixNode *root, const char *sequence, char **genome_array, int position, int ID);
     static suffixNode * createNode();
     static char * readFileFunction();
-    static void branchTree(suffixNode * parentNode, int j, int i, int currentChild, char ** genome_array, const char * contig, int ID, int startValue, int length, int totalLength);
-
 
 };
 

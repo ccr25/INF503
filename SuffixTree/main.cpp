@@ -78,10 +78,11 @@ int main() {
 
 
     for (int i = 0; i < numbRGenomes; i++) {
+        cout<<" contig size = "<<intArray[i]<<"\n";
         Suffix_Tree::suffix_tree(genome_array[i], intArray[i], root, i, genome_array);
     }
 
-    printTree(root, genome_array);
+    //printTree(root, genome_array);
     //char searcher[] = "CG";
     //cool = Suffix_Tree::search(root, searcher, 0, 2);
     //cout<<"searcher results: "<<cool<<"\n";

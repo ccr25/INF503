@@ -77,10 +77,53 @@ int main() {
     //gets size of genomes to make the count_array
 
 
-    for (int i = 0; i < numbRGenomes; i++) {
-        cout<<" contig size = "<<intArray[i]<<"\n";
-        Suffix_Tree::suffix_tree(genome_array[i], intArray[i], root, i, genome_array);
+    char tester[] = "CTAGAGAGAGAGAGAAGAGAGAGAAGAGAGAGAGAG";
+    char tester2[] = "AGAGAGAGAGAGAGAGAGAGAGAGAGAGAGAGA";
+    char tester3[] = "GGGGGCTCTCTCTCTCTCTCTCTCTCTCTCTCTCT";
+    char tester4[] = "AAAAAACTCTCTCTCTCTCTCTCTCTCTCTCTCTCT";
+    char * subStr = "CTCTCTCTCTCTCTCTCTCTCTCTCTCTCT";
+    char ** genome_test_array = new char *[4];
+    for (int i = 0; i < 4; i++) {
+        genome_test_array[i] = new char [36];
     }
+
+    strcpy(genome_test_array[0], tester);
+    strcpy(genome_test_array[1], tester2);
+    strcpy(genome_test_array[2], tester3);
+    strcpy(genome_test_array[3], tester4);
+    cout<<"This is the genome array 0: "<<genome_test_array[0]<<"\n";
+    cout<<"This is the genome array 1: "<<genome_test_array[1]<<"\n";
+
+    //Suffix_Tree::build_tree(root, tester, );
+
+        //cout<<" contig size = "<[i]<<"\n";
+    Suffix_Tree::build_tree(root, genome_test_array, 0 );
+    Suffix_Tree::build_tree(root, genome_test_array, 1 );
+    Suffix_Tree::build_tree(root, genome_test_array, 2);
+    Suffix_Tree::build_tree(root, genome_test_array, 3);
+
+    // A for 0, C for 1, G for 2, T for 3.
+	cout<<"root start first generation "<<root->children[1]->start<<"\n";
+	cout<<"root end first generation "<<root->children[1]->end<<"\n";
+    cout<<"root end first generation "<<root->children[1]->ID<<"\n";
+	/*cout<<"root start second generation "<<root->children[3]->children[3]->start<<"\n";
+	cout<<"root end second generation "<<root->children[3]->children[3]->end<<"\n";
+	cout<<"root start third generation"<<root->children[3]->children[3]->children[1]->start<<"\n";
+	cout<<"root end third generation "<<root->children[3]->children[3]->children[1]->ID<<"\n";
+	/*cout<<"root start forth generation"<<root->children[1]->children[1]->children[1]->children[1]->start<<"\n";
+	cout<<"root start forth generation"<<root->children[1]->children[1]->children[1]->children[1]->end<<"\n";
+    cool = Suffix_Tree::search(root, subStr,tester);
+    cout<<cool<<"\n";*/
+
+
+    cout<<"Is this working?"<<"\n";
+
+    vector<int> cool1 = Suffix_Tree::search(root, subStr, genome_test_array);
+    cout<<"Does this print: "<<"\n";
+    for (int i = 0; i < cool1.size(); i++) {
+        cout<<cool1[i]<<"\n";
+    }
+    cout<<"Size of vector: "<<cool1.size()<<"\n";
 
     //printTree(root, genome_array);
     //char searcher[] = "CG";

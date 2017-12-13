@@ -47,11 +47,11 @@ public:
     static void suffix_tree(char * contig, int contigSize,suffixNode *root, int ID, char ** genome_array );
     //void ~suffix_tree();
 
-    static void insert(struct suffixNode *root, const char *contig, int length, int ID, int startValue, char ** genome_array );
+    static int insert(struct suffixNode *root, const char *contig, int length, int ID, int startValue, char ** genome_array , int totalLength);
     static bool search(struct suffixNode *root, const char *contig, int mismatchValue, int length);
     static suffixNode * createNode();
     static char * readFileFunction();
-    static void branchTree(suffixNode * parentNode, int l, int currentChild, char ** genome_array, const char * contig, int ID, int startValue, int length);
+    static void branchTree(suffixNode * parentNode, int j, int i, int currentChild, char ** genome_array, const char * contig, int ID, int startValue, int length, int totalLength);
 
 
 };

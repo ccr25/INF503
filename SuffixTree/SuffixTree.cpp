@@ -19,7 +19,7 @@ void concatGenomes(int grt_num, char ** header_array, char ** count_array, int *
     i=0;
     lin_count = 0;
     count = 0;
-    ifstream fin("/Users/croe/Desktop/viralDatabase.fasta");
+    ifstream fin("/Users/croe/Desktop/viral_seqs.fasta");
     char * found;
     int iD;
     int size;
@@ -64,7 +64,7 @@ int * fasta_charcount(int grt_num) {
     i = 0;
     lin_count = 0;
     count = 0;
-    ifstream inDatabase("/Users/croe/Desktop/viralDatabase.fasta");
+    ifstream inDatabase("/Users/croe/Desktop/viral_seqs.fasta");
 
     int *count_array = (int *) calloc(grt_num, sizeof(int));
 
@@ -96,7 +96,7 @@ void Suffix_Tree::build_tree(suffixNode *root,char ** genome_array, int ID) {
     for (int i = 29; i < size; i++) {
         char split [i+1];
         strncpy(split, genome_array[ID] +size-i-1, 30);
-        cout<<split<<"\n";
+        //cout<<split<<"\n";
         Suffix_Tree::insert(root, split,genome_array,size-i, ID);
     }
 }
@@ -107,7 +107,7 @@ int readNumberOfGenomesInDatabase() {
 
     string line;
     int counter = 0;
-    ifstream inReadsFile("/Users/croe/Desktop/viralDatabase.fasta");
+    ifstream inReadsFile("/Users/croe/Desktop/viral_seqs.fasta");
     if (inReadsFile.is_open()) {
         while (!inReadsFile.eof()) {
             while (getline(inReadsFile, line)) {
@@ -185,7 +185,7 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *sequence,char **ge
     int gothrough = 0;
     int index,index1,index2;
     struct suffixNode *p = root;
-    cout<<" position is "<< position -1  <<"\n";
+    //cout<<" position is "<< position -1  <<"\n";
     while (gothrough<length)
     {
 
@@ -198,15 +198,17 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *sequence,char **ge
             p->	start = position+gothrough-1;
             p-> end = position +length-2;
             //cout<<"I got a new node lol"<<"\n";
-            cout<<"number 1 to see pushback"<<"\n";
-            cout<<"ID is: "<<ID<<"\n";
+           // cout<<"number 1 to see pushback"<<"\n";
+            //cout<<"ID is: "<<ID<<"\n";
             p->IDlist.insert(p->IDlist.end(), ID);
-            cout<<"node ID is: "<<p->ID<<"\n";
+           // cout<<"node ID is: "<<p->ID<<"\n";
 
             return;
         }else{
             // if we do have the node, we compare them
             int *temp;
+            suffixNode * pUP = createNode();
+            pUP = p;
             p=p->children[index];
             int size_of_nodestr=p->end-p->start+1;
             char node_str[size_of_nodestr];
@@ -228,21 +230,27 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *sequence,char **ge
                         //cout<<"previous_end "<<previous_end<<"\n";
                         index1=charToASCII(node_str[gothrough+j]);
                         index2=charToASCII(sequence[gothrough+j]);
-                        p->children[index1] = createNode();
-                        struct suffixNode *temp1 = p->children[index1];
-                        temp1->start=previous_end;
-                        temp1->end =previous_end+size_of_nodestr-j-1;
-                        //temp1->ID = ID;
-                        p->children[index2] = createNode();
-                        struct suffixNode *temp2 = p->children[index2];
+                        struct suffixNode *temp1 = createNode();
+                        pUP->children[index] = temp1;
+                        temp1->start=p->start;
+
+                        temp1->end =p->end;
+                        temp1->ID = p->ID;
+                        temp1->children[index1] = p;
+                        temp1->children[index1]->start = previous_end;
+
+                        temp1->children[index1]->end = previous_end + size_of_nodestr - j -1;
+                        temp1->children[index2] = createNode();
+                        struct suffixNode *temp2 = temp1->children[index2];
                         //cout<<"j is "<<j<<"\n";
                         //cout<<"length is "<<length<<"\n";
                         temp2->start=position-1+gothrough+j ;
                         temp2->end =position+length-2;
+                        //cout<<"HELLO"<<"\n";
                         temp2->ID = ID;
-                        cout<<"number 2 to see pushback"<<"\n";
+                        //cout<<"number 2 to see pushback"<<"\n";
                         temp2->IDlist.insert(temp2->IDlist.end(), ID);
-                        cout<<"node ID is: "<<temp2->ID<<"\n";
+                        //cout<<"node ID is: "<<temp2->ID<<"\n";
                         return;
                     }
                 }
@@ -261,26 +269,31 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *sequence,char **ge
                         index1=charToASCII(node_str[gothrough+j]);
                         index2=charToASCII(sequence[gothrough+j]);
                         p->children[index1] = createNode();
-                        struct suffixNode *temp1 = p->children[index1];
-                        temp1->start=previous_end;
-                        temp1->end =previous_end+size_of_nodestr-j-1;
+                        struct suffixNode *temp1 = createNode();
+                        pUP->children[index] = temp1;
+                        temp1->start=p->start;
+                        temp1->end =p->end;
+                        temp1->children[index1] = p;
+                        temp1->children[index1]->start = previous_end;
+                        temp1->children[index1]->end = previous_end + size_of_nodestr -j -1;
                         //temp1->ID = ID;
+                        temp1->ID = p->ID;
                         //temp1->IDlist->push_back(ID);
-                        p->children[index2] = createNode();
-                        struct suffixNode *temp2 = p->children[index2];
+                        temp1->children[index2] = createNode();
+                        struct suffixNode *temp2 = temp1->children[index2];
                         //cout<<"j is "<<j<<"\n";
                         //cout<<"length is "<<length<<"\n";
                         temp2->start=position-1+gothrough+j ;
                         temp2->end =position+length-2;
                         temp2->ID = ID;
                         temp2->IDlist.insert(temp2->IDlist.end(), ID);
-                        cout<<"node ID is: "<<temp2->ID<<"\n";
+                        //cout<<"node ID is: "<<temp2->ID<<"\n";
                         return;
                     }
 
                 }
                 p->IDlist.insert(p->IDlist.end(), ID);
-                cout<<"node ID is: "<<p->ID<<"\n";
+                //cout<<"node ID is: "<<p->ID<<"\n";
                 return;
             }
 
@@ -288,7 +301,7 @@ void Suffix_Tree::insert(struct suffixNode *root, const char *sequence,char **ge
     }
 
     p->IDlist.insert(p->IDlist.end(), ID);
-    cout<<"node ID is: "<<p->ID<<"\n";
+    //cout<<"node ID is: "<<p->ID<<"\n";
     return;
     //cout<<"childd start "<<p->	start<<"\n";
     //cout<<"childd end "<<p->	end<<"\n";
@@ -310,16 +323,17 @@ vector<int> Suffix_Tree::search(struct suffixNode *root, const char *sequence,ch
     struct suffixNode *p = root;
     while (gothrough<length)
     {
-        cout<<"go through is "<<gothrough<<"\n";
+        //cout<<"go through is "<<gothrough<<"\n";
         index = charToASCII(sequence[gothrough]);
-        cout<<"we there #3  "<<"\n";
+        //cout<<"we there #3  "<<"\n";
         if (!p->children[index]) {
-            cout<<"we there #2  "<<"\n";
+            //cout<<"we there #2  "<<"\n";
             return {};
         }else {
-            cout<<"we there #1 "<<"\n";
+           // cout<<"we there #1 "<<"\n";
+            suffixNode * buffer = p;
             p=p->children[index];
-            cout<<"this is hi:"<<"\n";
+           // cout<<"this is hi:"<<"\n";
 
             int size_of_nodestr=p->end - p->start +1;
             int size_of_substr=length-gothrough;
@@ -347,7 +361,7 @@ vector<int> Suffix_Tree::search(struct suffixNode *root, const char *sequence,ch
             }
 
         }
-        cout<<"we there #4 "<<"\n";
+        //cout<<"we there #4 "<<"\n";
 
     }
     cout<<"Found1::"<<"\n";
@@ -420,20 +434,20 @@ void printTree(suffixNode * root, char ** genome_array) {
     suffixNode * x = root;
    suffixNode * p = x->children[0];
     for (int i = 0; i < 5; i++) {
-        cout<<"node zero is : "<<p->children[3]->start<<"\n";
+        //cout<<"node zero is : "<<p->children[3]->start<<"\n";
         for(int j = 0; j < 5; j++) {
 
             if (p->children[0]->children[j] == nullptr) {
-                cout << "the child is: " << j << " " << "Yes" << "\n";
+                //cout << "the child is: " << j << " " << "Yes" << "\n";
                 //cout<<"node start is : "<<p->children[0]->start<<"\n";
                 //cout<<"node end : "<<p->children[0]->end<<"\n";
 
             }else{
-                cout<<"NOT NULL "<<j<<" "<<p->children[0]->children[j]->start<<"\n";
+               // cout<<"NOT NULL "<<j<<" "<<p->children[0]->children[j]->start<<"\n";
             }
         }
-        cout<<"end is : "<<p->children[3]->end<<"\n";
-        cout<<"the letter is : "<<genome_array[p->children[3]->ID][p->children[3]->start]<<"\n";
+        //cout<<"end is : "<<p->children[3]->end<<"\n";
+        //cout<<"the letter is : "<<genome_array[p->children[3]->ID][p->children[3]->start]<<"\n";
 
 
        // p = p->children[3];
